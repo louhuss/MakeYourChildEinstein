@@ -19,7 +19,7 @@ const SceneVillage = class extends Phaser.Scene {
     /* Zoom réglable à la molette, conservé d'une partie à l'autre.
        1 = tout le village d'un coup, 2,5 = au plus près des personnages. */
     const reglages = State.get().settings || {};
-    this.ZOOM = reglages.zoom || 1.25;
+    this.ZOOM = reglages.zoom || 1;   /* vue la plus large par défaut */
     this.ECHELLE_TEXTE = 1 / this.ZOOM;
     this.textesMonde = [];
     /* Un personnage LPC mesure ~30 px, les nôtres ~22 : l'étiquette se
