@@ -17,20 +17,108 @@ Ouvre `index.html` dans un navigateur. Si les images ne se chargent pas
 - **Agir** : clique sur un personnage, une porte ou un panneau
 - **Espace parents** : bouton ⚙️ en haut à droite, code **1234**
 
-## Ce que contient le prototype
+## Les missions
+
+Cinq activités sont entièrement jouables. Chacune suit la même règle : l'enfant
+**agit** avant d'apprendre, on ne lui fait jamais réciter une leçon, et une
+erreur n'enlève jamais de points.
+
+### ⚓ La pêche responsable — avec le Capitaine Marin
+
+> *« Ahoy, moussaillon ! La mer est calme, on lève l'ancre ? »*
+
+Le Capitaine t'emmène au large sur son bateau. Quatre prises t'attendent, et
+chacune se joue en quatre temps : tu **choisis ta zone** — surface, entre deux
+eaux ou près du fond — puis tu **déclenches ton lancer** au bon moment avec une
+jauge. Ça mord : tu **maintiens la tension** de la ligne sans la casser. Le
+poisson sort de l'eau… mais lequel ? Tu **l'identifies** parmi trois noms, en
+observant sa forme et ses couleurs. Enfin tu le **mesures avec une règle** et tu
+décides : le relâcher, le garder, ou demander conseil au Capitaine.
+
+Une des prises n'est pas un poisson mais un **déchet remonté du fond** : il faut
+le trier dans la bonne poubelle.
+
+**Ce qu'on y apprend** : reconnaître dix espèces, comprendre pourquoi on relâche
+les poissons trop petits pour qu'ils puissent grandir et se reproduire, repérer
+les espèces protégées, mesurer une prise, et découvrir ce que deviennent nos
+déchets en mer.
+**Récompense** : 45 piécettes, le badge *Protecteur de l'océan*, trois fiches
+d'encyclopédie et un objet pour ton terrain.
+
+### 🌾 Une journée au potager — avec Maya
+
+> *« Mes plantes ont des secrets à te raconter. »*
+
+Maya a besoin d'un coup de main, et la saison est affichée en haut de l'écran —
+tout en dépend. Tu commences par **préparer la terre** : douze parcelles à
+débarrasser des cailloux et des mauvaises herbes. Puis tu **choisis quoi semer**
+parmi des cultures proposées : certaines sont de saison, d'autres non, et Maya
+t'explique pourquoi. Tu **plantes et tu arroses**, en dosant : trop peu la plante
+a soif, trop c'est du gaspillage. Tu **plantes des fleurs près du potager** pour
+attirer les abeilles, sans lesquelles beaucoup de fruits ne se formeraient pas.
+Tu **récoltes** en reconnaissant ce qui est mûr. Et tu **composes un panier** en
+tenant compte de la saison et de la provenance des aliments.
+
+**Ce qu'on y apprend** : les fruits et légumes de saison, la différence entre un
+produit local et un produit exotique et les distances qu'il parcourt, les besoins
+d'une plante, le rôle des pollinisateurs, et pourquoi varier son alimentation.
+**Récompense** : 45 piécettes, le badge *Ami du potager*, trois fiches et un
+carré de potager pour ton terrain.
+
+### 🏦 La Banque des Curieux — avec Awa
+
+> *« Plus un coffre monte vite, plus il peut aussi descendre. »*
+
+Ce n'est pas une mission avec un début et une fin, mais une activité qui dure
+toute la partie. L'enfant y voit son **argent de poche**, versé par ses parents,
+et peut en placer une partie sur des **coffres aux noms rigolos** — La Tirelire
+Tranquille, Le Yoyo Malin, Le Grand Huit des Étoiles. Chaque coffre suit l'un des
+trois algorithmes : prudent, équilibré ou risqué. Leur valeur évolue toute seule,
+avec une courbe visible, et l'enfant décide quand retirer.
+
+**Ce qu'on y apprend** : la patience, le rapport entre risque et gain, et surtout
+que tant qu'on n'a pas retiré, rien n'est joué — une baisse n'est pas une perte.
+Le détail des rendements est plus bas.
+
+### 🛍️ La boutique — avec Théo
+
+Deux rayons. D'un côté les **récompenses préparées par les parents** dans leur
+espace : une soirée cinéma, un tour au parc, un privilège — l'enfant les échange
+contre son argent de poche ou ses piécettes, et vient les réclamer dans la vraie
+vie. De l'autre, **22 objets de décoration** achetés avec les piécettes gagnées
+en mission.
+
+### 🏠 Ton terrain
+
+Derrière ta maison, une grille de 18 × 12 cases entièrement libre. Tu y poses ce
+que tu as acheté — arbres, fleurs, tonneaux, table, ruche, poules, mouton, vache
+— tu déplaces, tu reprends, et tout se sauvegarde tout seul. C'est l'espace où
+l'enfant fait ce qu'il veut, sans objectif ni bonne réponse.
+
+### 📖 Le carnet de découvertes
+
+Il se remplit sans qu'on y pense : chaque information croisée en mission y
+laisse une fiche, avec une illustration, une phrase courte, une info étonnante
+et l'endroit où on l'a apprise. Un bouton permet de se la faire **lire à voix
+haute** — utile pour les plus jeunes. Dix-huit fiches, réparties en huit thèmes.
+
+### 🔜 Bientôt
+
+Le **musée** de Grand-Père Élio, l'**observatoire** de Noor et la **gare** de
+Sacha sont visibles dans le village et annoncent leur ouverture. L'architecture
+est prête à les accueillir : une mission est une scène autonome qui reçoit les
+données et rend des récompenses.
+
+## Le reste du prototype
 
 | Bloc | Contenu |
 |---|---|
-| Création du héros | Peau, visage, coiffure, haut, bas, chaussures, chapeau — chacun avec sa palette de couleurs. Un personnage n'est jamais sans vêtement. |
+| Création du héros | Peau, visage, coiffure, haut, bas, chaussures, chapeau — chacun avec sa palette. Un personnage n'est jamais sans vêtement. |
 | Village | 66 × 46 cases, 8 bâtiments, chemins qui se raccordent à l'herbe, mer animée |
-| 8 habitants | Ils se promènent, discutent entre eux, changent de phrases après une mission, et gardent leur apparence partout dans le jeu |
-| Mission pêche | Lancer, remonter, identifier, mesurer et décider, trier un déchet — 4 prises |
-| Mission ferme | Nettoyer, semer selon la saison, arroser, attirer les pollinisateurs, récolter, composer un panier |
-| Banque | Argent de poche, 9 coffres de placement, courbes d'évolution, placer et retirer |
+| 8 habitants | Ils se promènent, discutent entre eux, changent de phrases après une mission, et gardent leur apparence partout |
 | Espace parents | Argent de poche, récompenses, création de coffres, journal d'activité |
-| Terrain personnel | Grille de 18 × 12, 22 objets à poser, sauvegarde automatique |
-| Encyclopédie | 18 fiches qui se remplissent au fil des aventures, avec lecture audio |
-| Progression | Piécettes, niveau de curiosité, 5 badges |
+| Progression | Piécettes, niveau de curiosité en 5 paliers, 5 badges |
+| Sauvegarde | Automatique, dans le navigateur |
 
 ## La banque, en deux mots
 
