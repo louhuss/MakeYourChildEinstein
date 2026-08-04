@@ -1,5 +1,7 @@
 # Make Your Child Einstein
 
+![Le Village des Explorateurs](capture.png)
+
 Jeu d'aventure éducatif en 2D pour les enfants de 6 à 12 ans.
 On y crée son héros, on explore un village, on part en mission, on gagne des
 piécettes — et on apprend à gérer son argent de poche dans une vraie petite

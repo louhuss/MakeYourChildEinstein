@@ -381,5 +381,15 @@
     "ordre": 130
    }
   ]
+ },
+ "palettes": {
+  "corps": "peau",
+  "tete": "peau",
+  "visage": null,
+  "cheveux": "cheveux",
+  "haut": "vetement",
+  "bas": "vetement",
+  "chaussures": "vetement",
+  "chapeau": "vetement"
  }
 }

@@ -160,9 +160,18 @@ const LPC = (function () {
       const liste = manifest.calques[c] || [];
       return liste.length ? liste[Math.floor(Math.random() * liste.length)].id : null;
     };
+    /* Les cheveux tirent surtout des teintes naturelles : une chevelure
+       verte ou rose reste possible, mais une fois sur six seulement. */
+    const NATURELS = ['black', 'brown', 'chestnut', 'blonde', 'ginger',
+                      'redhead', 'ash', 'platinum', 'white'];
     const couleurAuHasard = function (c) {
-      const dispo = couleursDe(c);
-      if (dispo.length) l[c + 'Couleur'] = dispo[Math.floor(Math.random() * dispo.length)];
+      let dispo = couleursDe(c);
+      if (!dispo.length) return;
+      if (c === 'cheveux' && Math.random() > 0.17) {
+        const nat = dispo.filter(function (x) { return NATURELS.indexOf(x) >= 0; });
+        if (nat.length) dispo = nat;
+      }
+      l[c + 'Couleur'] = dispo[Math.floor(Math.random() * dispo.length)];
     };
     CATS_BASE.concat(CATS_HABIT).forEach(function (c) {
       const v = pioche(c); if (v) { l[c] = v; couleurAuHasard(c); }

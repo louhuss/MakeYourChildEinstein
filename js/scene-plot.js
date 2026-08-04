@@ -22,7 +22,7 @@ const ScenePlot = class extends Phaser.Scene {
     const K = Tileset.T;
     const COLS = this.ox + this.GW + 6, ROWS = this.oy + this.GH + 5;
     this.cameras.main.setBounds(0, 0, COLS * T, ROWS * T);
-    this.ZOOM = 1;
+    this.ZOOM = 1.5;
     this.cameras.main.setZoom(this.ZOOM);
     this.cameras.main.roundPixels = true;
 

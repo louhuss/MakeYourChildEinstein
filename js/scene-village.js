@@ -16,7 +16,7 @@ const SceneVillage = class extends Phaser.Scene {
     /* Zoom de la caméra. 2 = vue large (on voit 30 cases sur 19),
        3 = vue rapprochée. Tous les textes du monde s'y adaptent
        automatiquement grâce à ECHELLE_TEXTE. */
-    this.ZOOM = 1;
+    this.ZOOM = 1.5;
     this.ECHELLE_TEXTE = 1 / this.ZOOM;
     /* Un personnage LPC mesure ~30 px, les nôtres ~22 : l'étiquette se
        place juste au-dessus du crâne dans les deux cas. */
