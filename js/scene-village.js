@@ -16,8 +16,12 @@ const SceneVillage = class extends Phaser.Scene {
     /* Zoom de la caméra. 2 = vue large (on voit 30 cases sur 19),
        3 = vue rapprochée. Tous les textes du monde s'y adaptent
        automatiquement grâce à ECHELLE_TEXTE. */
-    this.ZOOM = 1.5;
+    /* Zoom réglable à la molette, conservé d'une partie à l'autre.
+       1 = tout le village d'un coup, 2,5 = au plus près des personnages. */
+    const reglages = State.get().settings || {};
+    this.ZOOM = reglages.zoom || 1.25;
     this.ECHELLE_TEXTE = 1 / this.ZOOM;
+    this.textesMonde = [];
     /* Un personnage LPC mesure ~30 px, les nôtres ~22 : l'étiquette se
        place juste au-dessus du crâne dans les deux cas. */
     this.HAUTEUR_ETIQUETTE =
@@ -106,9 +110,13 @@ const SceneVillage = class extends Phaser.Scene {
     this.prompt.setScale(this.ECHELLE_TEXTE);
     this.prompt.on('pointerdown', () => this.interact());
     /* petit rebond permanent pour attirer l'œil */
-    const e = this.ECHELLE_TEXTE;
-    this.tweens.add({ targets: this.prompt, scaleX: e * 1.05, scaleY: e * 1.05,
-      duration: 700, yoyo: true, repeat: -1, ease: 'Sine.easeInOut' });
+    /* léger battement, calculé à partir de l'échelle du moment */
+    this.time.addEvent({ delay: 700, loop: true, callback: () => {
+      if (!this.prompt.visible) return;
+      const e = this.ECHELLE_TEXTE;
+      this.tweens.add({ targets: this.prompt, scaleX: e * 1.06, scaleY: e * 1.06,
+        duration: 340, yoyo: true, ease: 'Sine.easeInOut' });
+    }});
 
 
     /* ============================================================
@@ -149,6 +157,29 @@ const SceneVillage = class extends Phaser.Scene {
     this.input.on('pointerup', stop);
     this.input.on('pointerupoutside', stop);
     this.input.on('gameout', stop);
+
+    /* molette de la souris : zoom avant / arrière */
+    this.input.on('wheel', (p, objets, dx, dy) => {
+      if (UI.isOpen()) return;
+      const pas = dy > 0 ? -0.25 : 0.25;
+      this.appliquerZoom(Phaser.Math.Clamp(this.ZOOM + pas, 1, 2.5));
+    });
+
+    this.appliquerZoom = (z) => {
+      this.ZOOM = Math.round(z * 100) / 100;
+      this.ECHELLE_TEXTE = 1 / this.ZOOM;
+      this.cameras.main.setZoom(this.ZOOM);
+      /* on remet à l'échelle tous les textes flottants du monde, sans avoir
+         à tenir une liste à jour : ils se reconnaissent à leur profondeur */
+      this.children.list.forEach((o) => {
+        if (o.type === 'Text' && o.depth >= 99990) o.setScale(this.ECHELLE_TEXTE);
+      });
+      if (this.prompt) this.prompt.setScale(this.ECHELLE_TEXTE);
+      const s = State.get().settings || (State.get().settings = {});
+      s.zoom = this.ZOOM;
+      State.save();
+      UI.toast('Zoom ' + this.ZOOM.toFixed(2).replace('.', ',') + ' ×  (molette pour ajuster)');
+    };
 
     /* le clavier ne sert plus qu'à fermer les fenêtres */
     this.input.keyboard.on('keydown-ESC', () => { if (UI.isOpen()) UI.hideAll(); });
@@ -367,6 +398,7 @@ const SceneVillage = class extends Phaser.Scene {
         fontFamily: 'Verdana', fontSize: '12px', color: '#fff8ee',
         backgroundColor: '#2f2838cc', padding: { x: 6, y: 3 }
       }).setOrigin(0.5, 1).setDepth(99998).setScale(this.ECHELLE_TEXTE);
+      this.textesMonde.push(t);
       if (bientot) t.setColor('#c9c0ae');
       return t;
     };
