@@ -1,0 +1,24 @@
+# ---------------------------------------------------------------
+# Dossiers volumineux : ils servent de matière première, pas au jeu.
+# Le jeu n'utilise que assets/lpc-slim, généré par scan/build.
+# ---------------------------------------------------------------
+assets/lpc/
+*.zip
+
+# Packs Kenney non utilisés par le jeu (modèles 3D, décors d'autres univers)
+assets/kenney_food-kit/
+assets/kenney_mini-characters/
+assets/kenney_blocky-characters_20/
+assets/kenney_tiny-ski/
+assets/kenney_tiny-battle/
+
+# Images de référence et brouillons
+*.webp
+lyeh9lnwx0fe1.png
+91gVtejbPNL.jpg
+js/*.old.js
+archive-iso/
+
+# Système
+.DS_Store
+Thumbs.db

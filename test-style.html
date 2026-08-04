@@ -1,0 +1,402 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<title>Test de direction artistique — village isométrique peint</title>
+<style>
+  body{margin:0;background:#20321f;font-family:"Trebuchet MS",Verdana,sans-serif;color:#f4f1e8;
+    display:flex;flex-direction:column;align-items:center;gap:14px;padding:18px}
+  h1{font-size:19px;margin:0}
+  p{margin:0;font-size:13px;opacity:.75;max-width:1180px;text-align:center;line-height:1.5}
+  canvas{border-radius:14px;box-shadow:0 14px 40px rgba(0,0,0,.5);display:block;max-width:100%}
+  .legend{display:flex;gap:18px;font-size:12px;opacity:.7;flex-wrap:wrap;justify-content:center}
+</style>
+</head>
+<body>
+<h1>Direction artistique — isométrique peint</h1>
+<p>Coin de village dessiné entièrement en code, sans aucune image : projection isométrique,
+rendu peint (dégradés et contours) plutôt que pixel art, palette chaude et saturée.
+Inspiration libre des références que tu m'as montrées — aucun élément copié.</p>
+<canvas id="c" width="1200" height="720"></canvas>
+<div class="legend">
+  <span>◆ tuiles losange 96 × 48</span><span>◆ herbe peinte + touffes</span>
+  <span>◆ chemin de terre et dalles</span><span>◆ charpente en bois massif</span>
+  <span>◆ toit en écailles</span><span>◆ ombres douces</span>
+</div>
+
+<script>
+const c = document.getElementById('c'), x = c.getContext('2d');
+const TW = 96, TH = 48, HW = TW/2, HH = TH/2;
+const OX = 600, OY = 130;
+const S = (gx,gy)=>({x: OX + (gx-gy)*HW, y: OY + (gx+gy)*HH});
+
+/* ---------- palette, tirée des références ---------- */
+const P = {
+  grassA:'#9bd13f', grassB:'#7cb52e', grassC:'#b6e05a', grassD:'#5f9421',
+  dirtA:'#e2cd96',  dirtB:'#cdb178',  dirtC:'#f0e2b8',
+  slab:'#e9e4d2',   slabS:'#cfc7b0',
+  woodA:'#c79a55',  woodB:'#a67a3c',  woodC:'#7d5527', woodD:'#5c3d1b',
+  roofA:'#8fb8d4',  roofB:'#6d9bbb',  roofC:'#b3d5ea',
+  roofG:'#8cc63f',  roofGd:'#6ba32b',
+  wall:'#f2e5c8',   wallS:'#dbcaa6',
+  leafA:'#7ec13c',  leafB:'#5d9b28',  leafC:'#9ed957', leafD:'#3f7018',
+  stone:'#c9c9c0',  stoneS:'#a4a49a',
+  ink:'#4a3418'
+};
+function rnd(s){let v=s*9301+49297;return()=>{v=(v*9301+49297)%233280;return v/233280;};}
+
+/* ---------- fonds : herbe peinte ---------- */
+function grassTile(gx,gy){
+  const p = S(gx,gy), r = rnd(gx*31+gy*17+3);
+  const g = x.createLinearGradient(p.x, p.y-HH, p.x, p.y+HH);
+  g.addColorStop(0, P.grassC); g.addColorStop(.55, P.grassA); g.addColorStop(1, P.grassB);
+  x.beginPath();
+  x.moveTo(p.x, p.y-HH); x.lineTo(p.x+HW, p.y); x.lineTo(p.x, p.y+HH); x.lineTo(p.x-HW, p.y);
+  x.closePath(); x.fillStyle = g; x.fill();
+  /* taches plus sombres, façon peinture */
+  x.save(); x.clip();
+  for(let i=0;i<4;i++){
+    x.globalAlpha = .16 + r()*.14;
+    x.fillStyle = r()>.5 ? P.grassD : P.grassC;
+    x.beginPath();
+    x.ellipse(p.x-HW+r()*TW, p.y-HH+r()*TH, 10+r()*22, 5+r()*9, r()*3, 0, 7);
+    x.fill();
+  }
+  x.restore();
+}
+function tuft(px,py,s,seed){
+  const r = rnd(seed);
+  for(let i=0;i<5;i++){
+    const a = -1.9 + i*0.42 + r()*.2, len = (9+r()*7)*s;
+    x.strokeStyle = i%2 ? P.grassD : P.grassB;
+    x.lineWidth = 2.4*s; x.lineCap='round';
+    x.beginPath(); x.moveTo(px,py);
+    x.quadraticCurveTo(px+Math.cos(a)*len*.6, py+Math.sin(a)*len*.7, px+Math.cos(a)*len, py+Math.sin(a)*len-2*s);
+    x.stroke();
+  }
+}
+/* ---------- chemin de terre avec dalles ---------- */
+function dirtTile(gx,gy){
+  const p = S(gx,gy), r = rnd(gx*13+gy*29+7);
+  const g = x.createLinearGradient(p.x,p.y-HH,p.x,p.y+HH);
+  g.addColorStop(0,P.dirtC); g.addColorStop(1,P.dirtB);
+  x.beginPath();
+  x.moveTo(p.x,p.y-HH); x.lineTo(p.x+HW,p.y); x.lineTo(p.x,p.y+HH); x.lineTo(p.x-HW,p.y);
+  x.closePath(); x.fillStyle=g; x.fill();
+  x.save(); x.clip();
+  for(let i=0;i<3;i++){
+    x.globalAlpha=.2; x.fillStyle=P.dirtB;
+    x.beginPath(); x.ellipse(p.x-HW+r()*TW,p.y-HH+r()*TH,12+r()*18,6+r()*7,0,0,7); x.fill();
+  }
+  x.globalAlpha=1;
+  /* dalles claires posées çà et là */
+  if(r()>.45){
+    const sx=p.x-20+r()*40, sy=p.y-8+r()*16, sw=16+r()*14;
+    x.fillStyle=P.slabS;
+    x.beginPath(); x.ellipse(sx,sy+2,sw,sw*.5,0,0,7); x.fill();
+    x.fillStyle=P.slab;
+    x.beginPath(); x.ellipse(sx,sy,sw,sw*.5,0,0,7); x.fill();
+  }
+  x.restore();
+}
+/* bord doux entre herbe et terre */
+function grassOverlap(gx,gy,side){
+  const p=S(gx,gy), r=rnd(gx*7+gy*11+side);
+  x.save();
+  x.beginPath();
+  x.moveTo(p.x,p.y-HH); x.lineTo(p.x+HW,p.y); x.lineTo(p.x,p.y+HH); x.lineTo(p.x-HW,p.y);
+  x.closePath(); x.clip();
+  const d = [[0,-1],[1,0],[0,1],[-1,0]][side];
+  const cx = p.x + d[0]*HW*0.5 - d[1]*HW*0.5, cy = p.y + d[0]*HH*0.5 + d[1]*HH*0.5;
+  x.fillStyle=P.grassA;
+  for(let i=0;i<9;i++){
+    x.beginPath();
+    x.ellipse(cx - d[0]*0+ (r()-.5)*70, cy + (r()-.5)*24, 12+r()*12, 7+r()*6, 0,0,7);
+    x.fill();
+  }
+  x.fillStyle=P.grassC; x.globalAlpha=.6;
+  for(let i=0;i<5;i++){
+    x.beginPath(); x.ellipse(cx+(r()-.5)*60, cy+(r()-.5)*18, 8+r()*8, 4+r()*4,0,0,7); x.fill();
+  }
+  x.restore();
+}
+/* ---------- ombre douce ---------- */
+function shade(px,py,rw,rh,a){
+  for(let i=3;i>0;i--){
+    x.fillStyle=`rgba(50,60,25,${(a||0.16)/i})`;
+    x.beginPath(); x.ellipse(px,py,rw*(1+i*0.12),rh*(1+i*0.12),0,0,7); x.fill();
+  }
+}
+/* ---------- arbre ---------- */
+function tree(gx,gy,s){
+  const p=S(gx,gy); s=s||1;
+  shade(p.x,p.y+4,44*s,20*s,.2);
+  /* tronc courbé */
+  x.fillStyle=P.woodC;
+  x.beginPath();
+  x.moveTo(p.x-13*s,p.y);
+  x.quadraticCurveTo(p.x-9*s,p.y-60*s,p.x-6*s,p.y-92*s);
+  x.lineTo(p.x+9*s,p.y-92*s);
+  x.quadraticCurveTo(p.x+13*s,p.y-58*s,p.x+16*s,p.y);
+  x.closePath(); x.fill();
+  x.fillStyle=P.woodB;
+  x.beginPath();
+  x.moveTo(p.x-13*s,p.y); x.quadraticCurveTo(p.x-9*s,p.y-60*s,p.x-6*s,p.y-92*s);
+  x.lineTo(p.x+1*s,p.y-92*s); x.quadraticCurveTo(p.x-1*s,p.y-56*s,p.x+2*s,p.y);
+  x.closePath(); x.fill();
+  x.strokeStyle=P.woodD; x.lineWidth=3*s; x.lineJoin='round';
+  x.beginPath();
+  x.moveTo(p.x-13*s,p.y); x.quadraticCurveTo(p.x-9*s,p.y-60*s,p.x-6*s,p.y-92*s);
+  x.moveTo(p.x+16*s,p.y); x.quadraticCurveTo(p.x+13*s,p.y-58*s,p.x+9*s,p.y-92*s);
+  x.stroke();
+  /* houppier en écailles superposées */
+  const blobs=[[0,-118,52],[-38,-100,36],[38,-100,36],[-20,-138,38],[22,-140,34],[0,-158,28]];
+  x.strokeStyle=P.leafD; x.lineWidth=4*s; x.lineJoin='round';
+  blobs.forEach(b=>{ x.beginPath(); x.arc(p.x+b[0]*s,p.y+b[1]*s,b[2]*s,0,7); x.stroke(); });
+  blobs.forEach(b=>{
+    const g=x.createRadialGradient(p.x+(b[0]-12)*s,p.y+(b[1]-14)*s,4,p.x+b[0]*s,p.y+b[1]*s,b[2]*s);
+    g.addColorStop(0,P.leafC); g.addColorStop(.6,P.leafA); g.addColorStop(1,P.leafB);
+    x.fillStyle=g; x.beginPath(); x.arc(p.x+b[0]*s,p.y+b[1]*s,b[2]*s,0,7); x.fill();
+  });
+  /* reflets */
+  x.fillStyle='rgba(210,245,140,.55)';
+  x.beginPath(); x.ellipse(p.x-26*s,p.y-146*s,16*s,9*s,-0.5,0,7); x.fill();
+}
+/* ---------- maison ---------- */
+function house(gx,gy,w,d,H){
+  const n=S(gx,gy), a={x:n.x,y:n.y-HH};
+  const b={x:a.x+w*HW,y:a.y+w*HH}, cc={x:b.x-d*HW,y:b.y+d*HH}, e={x:a.x-d*HW,y:a.y+d*HH};
+  shade((a.x+cc.x)/2,cc.y+6,(w+d)*HW*0.5,(w+d)*HH*0.5,.22);
+  /* murs */
+  const gl=x.createLinearGradient(e.x,e.y-H,cc.x,cc.y);
+  gl.addColorStop(0,P.wallS); gl.addColorStop(1,'#c9b68f');
+  x.fillStyle=gl;
+  x.beginPath(); x.moveTo(e.x,e.y-H); x.lineTo(cc.x,cc.y-H); x.lineTo(cc.x,cc.y); x.lineTo(e.x,e.y);
+  x.closePath(); x.fill();
+  const gr=x.createLinearGradient(cc.x,cc.y-H,b.x,b.y);
+  gr.addColorStop(0,'#f7ecd4'); gr.addColorStop(1,P.wall);
+  x.fillStyle=gr;
+  x.beginPath(); x.moveTo(cc.x,cc.y-H); x.lineTo(b.x,b.y-H); x.lineTo(b.x,b.y); x.lineTo(cc.x,cc.y);
+  x.closePath(); x.fill();
+  /* poutres d'angle, épaisses et arrondies */
+  const beam=(p1,p2,wd)=>{
+    x.strokeStyle=P.woodD; x.lineWidth=wd+6; x.lineCap='round';
+    x.beginPath(); x.moveTo(p1.x,p1.y); x.lineTo(p2.x,p2.y); x.stroke();
+    x.strokeStyle=P.woodA; x.lineWidth=wd;
+    x.beginPath(); x.moveTo(p1.x,p1.y); x.lineTo(p2.x,p2.y); x.stroke();
+    x.strokeStyle=P.woodC; x.lineWidth=wd*0.35;
+    x.beginPath(); x.moveTo(p1.x+wd*0.3,p1.y); x.lineTo(p2.x+wd*0.3,p2.y); x.stroke();
+  };
+  beam({x:e.x,y:e.y},{x:e.x,y:e.y-H},14);
+  beam({x:cc.x,y:cc.y},{x:cc.x,y:cc.y-H},16);
+  beam({x:b.x,y:b.y},{x:b.x,y:b.y-H},14);
+  beam({x:e.x,y:e.y-H},{x:cc.x,y:cc.y-H},11);
+  beam({x:cc.x,y:cc.y-H},{x:b.x,y:b.y-H},11);
+  /* porte cintrée */
+  const dx=(e.x+cc.x)/2, dy=(e.y+cc.y)/2;
+  x.fillStyle=P.woodD;
+  x.beginPath(); x.moveTo(dx-16,dy-6-52); x.lineTo(dx+16,dy+10-52);
+  x.lineTo(dx+16,dy+10); x.lineTo(dx-16,dy-6); x.closePath(); x.fill();
+  x.fillStyle='#8fb8d4';
+  x.beginPath(); x.moveTo(dx-11,dy-5-46); x.lineTo(dx+12,dy+7-46);
+  x.lineTo(dx+12,dy+7); x.lineTo(dx-11,dy-5); x.closePath(); x.fill();
+  /* fenêtre ronde */
+  const wx=(cc.x+b.x)/2+18, wy=(cc.y+b.y)/2-H+34;
+  x.fillStyle=P.woodD; x.beginPath(); x.ellipse(wx,wy,17,20,0,0,7); x.fill();
+  x.fillStyle=P.roofC; x.beginPath(); x.ellipse(wx,wy,12,15,0,0,7); x.fill();
+  x.fillStyle='rgba(255,255,255,.45)'; x.beginPath(); x.ellipse(wx-4,wy-5,5,7,0,0,7); x.fill();
+  /* toit en écailles */
+  const rise=78;
+  const m1={x:(a.x+e.x)/2,y:(a.y+e.y)/2-H-rise}, m2={x:(b.x+cc.x)/2,y:(b.y+cc.y)/2-H-rise};
+  const pente=(p1,p2,mA,mB,col,colD)=>{
+    x.fillStyle=colD;
+    x.beginPath(); x.moveTo(p1.x,p1.y-H); x.lineTo(p2.x,p2.y-H); x.lineTo(mB.x,mB.y); x.lineTo(mA.x,mA.y);
+    x.closePath(); x.fill();
+    /* écailles */
+    for(let row=0;row<6;row++){
+      const t0=row/6, t1=(row+1)/6;
+      for(let i=0;i<9;i++){
+        const u=(i+ (row%2?0.5:0))/9;
+        const px=(p1.x+(p2.x-p1.x)*u)*(1-t0)+(mA.x+(mB.x-mA.x)*u)*t0;
+        const py=(p1.y-H+(p2.y-p1.y)*u)*(1-t0)+(mA.y+(mB.y-mA.y)*u)*t0;
+        x.fillStyle=col;
+        x.beginPath(); x.ellipse(px,py,11,8,0,Math.PI,0); x.fill();
+        x.strokeStyle='rgba(0,0,0,.13)'; x.lineWidth=1;
+        x.beginPath(); x.ellipse(px,py,11,8,0,Math.PI,0); x.stroke();
+      }
+    }
+  };
+  pente(e,cc,m1,m2,P.roofB,P.roofA);
+  pente(a,b,m1,m2,P.roofA,P.roofC);
+  /* faîtage et débords en bois */
+  beam(m1,m2,13);
+  beam({x:e.x-10,y:e.y-H+4},m1,10);
+  beam({x:b.x+10,y:b.y-H+4},m2,10);
+}
+/* ---------- petits objets ---------- */
+function barrel(px,py,s){
+  s=s||1; shade(px,py+2,20*s,9*s,.18);
+  const g=x.createLinearGradient(px-16*s,0,px+16*s,0);
+  g.addColorStop(0,P.woodC); g.addColorStop(.4,P.woodA); g.addColorStop(1,P.woodB);
+  x.fillStyle=g;
+  x.beginPath(); x.moveTo(px-15*s,py-6*s);
+  x.quadraticCurveTo(px-19*s,py-24*s,px-15*s,py-42*s);
+  x.lineTo(px+15*s,py-42*s);
+  x.quadraticCurveTo(px+19*s,py-24*s,px+15*s,py-6*s);
+  x.closePath(); x.fill();
+  x.strokeStyle=P.woodD; x.lineWidth=3*s; x.stroke();
+  x.fillStyle='#8c7a5e';
+  x.fillRect(px-18*s,py-36*s,36*s,4*s); x.fillRect(px-18*s,py-16*s,36*s,4*s);
+  x.fillStyle=P.woodA; x.beginPath(); x.ellipse(px,py-42*s,15*s,6*s,0,0,7); x.fill();
+  x.strokeStyle=P.woodD; x.lineWidth=2.5*s; x.stroke();
+}
+function crate(px,py,s){
+  s=s||1; shade(px,py+2,24*s,10*s,.18);
+  const h=34*s,w=26*s;
+  x.fillStyle=P.woodB;
+  x.beginPath(); x.moveTo(px-w,py-8*s); x.lineTo(px,py+6*s); x.lineTo(px,py+6*s-h); x.lineTo(px-w,py-8*s-h);
+  x.closePath(); x.fill();
+  x.fillStyle=P.woodA;
+  x.beginPath(); x.moveTo(px,py+6*s); x.lineTo(px+w,py-8*s); x.lineTo(px+w,py-8*s-h); x.lineTo(px,py+6*s-h);
+  x.closePath(); x.fill();
+  x.fillStyle=P.woodC;
+  x.beginPath(); x.moveTo(px-w,py-8*s-h); x.lineTo(px,py+6*s-h); x.lineTo(px+w,py-8*s-h); x.lineTo(px,py-22*s-h);
+  x.closePath(); x.fill();
+  x.strokeStyle=P.woodD; x.lineWidth=3*s; x.lineJoin='round';
+  x.beginPath(); x.moveTo(px-w,py-8*s); x.lineTo(px,py+6*s); x.lineTo(px+w,py-8*s);
+  x.lineTo(px+w,py-8*s-h); x.lineTo(px,py-22*s-h); x.lineTo(px-w,py-8*s-h); x.closePath();
+  x.moveTo(px,py+6*s); x.lineTo(px,py+6*s-h); x.moveTo(px-w,py-8*s-h); x.lineTo(px,py+6*s-h); x.lineTo(px+w,py-8*s-h);
+  x.stroke();
+}
+function fence(gx,gy,dir){
+  const p=S(gx,gy);
+  const d = dir? {x:HW,y:HH} : {x:-HW,y:HH};
+  shade(p.x,p.y+2,14,6,.16);
+  x.strokeStyle=P.woodD; x.lineWidth=13; x.lineCap='round';
+  x.beginPath(); x.moveTo(p.x,p.y); x.lineTo(p.x,p.y-46); x.stroke();
+  x.strokeStyle=P.woodA; x.lineWidth=8;
+  x.beginPath(); x.moveTo(p.x,p.y); x.lineTo(p.x,p.y-46); x.stroke();
+  [16,30].forEach(h=>{
+    x.strokeStyle=P.woodD; x.lineWidth=10;
+    x.beginPath(); x.moveTo(p.x,p.y-h); x.lineTo(p.x+d.x,p.y-h+d.y); x.stroke();
+    x.strokeStyle=P.woodA; x.lineWidth=6;
+    x.beginPath(); x.moveTo(p.x,p.y-h); x.lineTo(p.x+d.x,p.y-h+d.y); x.stroke();
+  });
+}
+function stump(px,py){
+  shade(px,py+2,18,8,.18);
+  x.fillStyle=P.woodC;
+  x.beginPath(); x.ellipse(px,py-14,17,8,0,0,7); x.fill();
+  x.fillRect(px-17,py-14,34,14);
+  x.fillStyle=P.woodB; x.beginPath(); x.ellipse(px,py,17,8,0,0,7); x.fill();
+  x.fillStyle='#d8ab6a'; x.beginPath(); x.ellipse(px,py-14,13,6,0,0,7); x.fill();
+  x.strokeStyle=P.woodD; x.lineWidth=2;
+  x.beginPath(); x.ellipse(px,py-14,8,4,0,0,7); x.stroke();
+  x.beginPath(); x.ellipse(px,py-14,17,8,0,0,7); x.stroke();
+}
+function flowers(px,py,col){
+  for(let i=0;i<4;i++){
+    const fx=px+(Math.random()-.5)*34, fy=py+(Math.random()-.5)*14;
+    x.strokeStyle=P.grassD; x.lineWidth=2;
+    x.beginPath(); x.moveTo(fx,fy); x.lineTo(fx,fy-11); x.stroke();
+    x.fillStyle=col; x.beginPath(); x.arc(fx,fy-13,4.5,0,7); x.fill();
+    x.fillStyle='#fff3b0'; x.beginPath(); x.arc(fx,fy-13,1.8,0,7); x.fill();
+  }
+}
+/* ---------- personnage ---------- */
+function hero(px,py){
+  shade(px,py+2,16,7,.22);
+  /* jambes */
+  x.fillStyle='#3f5f9e'; x.fillRect(px-9,py-26,7,24); x.fillRect(px+2,py-26,7,24);
+  x.fillStyle='#6b4526'; x.fillRect(px-10,py-6,9,6); x.fillRect(px+1,py-6,9,6);
+  /* corps */
+  const g=x.createLinearGradient(px-14,0,px+14,0);
+  g.addColorStop(0,'#d94f3d'); g.addColorStop(1,'#f07a63');
+  x.fillStyle=g;
+  x.beginPath(); x.roundRect(px-14,py-52,28,28,7); x.fill();
+  x.strokeStyle='#8a2f22'; x.lineWidth=2.5; x.stroke();
+  /* bras */
+  x.fillStyle='#f0c49a';
+  x.beginPath(); x.roundRect(px-20,py-48,7,20,3.5); x.fill();
+  x.beginPath(); x.roundRect(px+13,py-48,7,20,3.5); x.fill();
+  /* tête */
+  x.fillStyle='#f5cda3';
+  x.beginPath(); x.ellipse(px,py-66,17,16,0,0,7); x.fill();
+  x.strokeStyle='#b98a5e'; x.lineWidth=2; x.stroke();
+  /* cheveux */
+  x.fillStyle='#5b3a1c';
+  x.beginPath(); x.arc(px,py-72,17,Math.PI,0); x.fill();
+  x.fillRect(px-17,py-73,34,6);
+  x.beginPath(); x.arc(px-14,py-66,5,0,7); x.fill();
+  x.beginPath(); x.arc(px+14,py-66,5,0,7); x.fill();
+  /* visage */
+  x.fillStyle='#3b2b20';
+  x.beginPath(); x.ellipse(px-6,py-64,2.4,3,0,0,7); x.fill();
+  x.beginPath(); x.ellipse(px+6,py-64,2.4,3,0,0,7); x.fill();
+  x.strokeStyle='#b0654f'; x.lineWidth=2; x.lineCap='round';
+  x.beginPath(); x.arc(px,py-59,5,0.3,Math.PI-0.3); x.stroke();
+  x.fillStyle='rgba(240,130,120,.4)';
+  x.beginPath(); x.ellipse(px-11,py-60,4,2.5,0,0,7); x.fill();
+  x.beginPath(); x.ellipse(px+11,py-60,4,2.5,0,0,7); x.fill();
+}
+
+/* ============================================================
+   COMPOSITION
+   ============================================================ */
+const COLS=13, ROWS=13;
+const path = (gx,gy)=> (gy>=5 && gy<=6) || (gx>=6 && gx<=7 && gy>6);
+
+x.fillStyle='#6ba32b'; x.fillRect(0,0,c.width,c.height);
+/* sol */
+for(let gy=0;gy<ROWS;gy++) for(let gx=0;gx<COLS;gx++){
+  path(gx,gy) ? dirtTile(gx,gy) : grassTile(gx,gy);
+}
+/* débordement de l'herbe sur la terre */
+for(let gy=0;gy<ROWS;gy++) for(let gx=0;gx<COLS;gx++){
+  if(!path(gx,gy)) continue;
+  [[0,-1,0],[1,0,1],[0,1,2],[-1,0,3]].forEach(s=>{
+    if(!path(gx+s[0],gy+s[1])) grassOverlap(gx,gy,s[2]);
+  });
+}
+/* touffes d'herbe */
+for(let i=0;i<130;i++){
+  const gx=Math.random()*COLS, gy=Math.random()*ROWS;
+  if(path(Math.round(gx),Math.round(gy))) continue;
+  const p=S(gx,gy); tuft(p.x,p.y,.7+Math.random()*.6,i);
+}
+/* objets, triés par profondeur */
+const items=[];
+const add=(gx,gy,fn)=>items.push({d:gx+gy,fn:fn});
+add(1.2,1.4,()=>tree(1.2,1.4,1.05));
+add(0.6,4.2,()=>tree(0.6,4.2,.82));
+add(3.4,0.5,()=>tree(3.4,0.5,.9));
+add(10.5,1.6,()=>tree(10.5,1.6,1.0));
+add(11.4,8.2,()=>tree(11.4,8.2,.86));
+add(1.4,9.6,()=>tree(1.4,9.6,.95));
+add(9.2,2.6,()=>house(9.2,2.6,3,3,86));
+add(2.2,6.6,()=>house(2.2,6.6,2.6,2.6,74));
+add(5.0,2.0,()=>{const p=S(5.0,2.0); stump(p.x,p.y);});
+add(8.4,7.0,()=>{const p=S(8.4,7.0); stump(p.x,p.y);});
+add(4.3,4.2,()=>{const p=S(4.3,4.2); barrel(p.x,p.y,1);});
+add(4.9,4.5,()=>{const p=S(4.9,4.5); barrel(p.x,p.y,.85);});
+add(3.6,4.0,()=>{const p=S(3.6,4.0); crate(p.x,p.y,.9);});
+add(9.0,5.4,()=>{const p=S(9.0,5.4); crate(p.x,p.y,1);});
+add(9.7,5.8,()=>{const p=S(9.7,5.8); barrel(p.x,p.y,.9);});
+for(let i=0;i<5;i++) add(4+i,8.2,()=>fence(4+i,8.2,true));
+for(let i=0;i<4;i++) add(9.0,4.0+i,()=>fence(9.0,4.0+i,false));
+for(let i=0;i<16;i++){
+  const gx=Math.random()*COLS, gy=Math.random()*ROWS;
+  if(path(Math.round(gx),Math.round(gy))) continue;
+  const col=['#e8503a','#f7d64a','#ef7fc0','#ffffff','#9a7fd8'][i%5];
+  add(gx,gy,()=>{const p=S(gx,gy); flowers(p.x,p.y,col);});
+}
+add(6.6,6.2,()=>{const p=S(6.6,6.2); hero(p.x,p.y);});
+items.sort((a,b)=>a.d-b.d).forEach(o=>o.fn());
+
+/* voile de lumière chaude */
+const vg=x.createRadialGradient(560,180,80,600,360,760);
+vg.addColorStop(0,'rgba(255,244,190,.22)'); vg.addColorStop(1,'rgba(20,40,10,.28)');
+x.fillStyle=vg; x.fillRect(0,0,c.width,c.height);
+</script>
+</body>
+</html>

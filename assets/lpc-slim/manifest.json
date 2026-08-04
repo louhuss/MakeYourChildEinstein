@@ -1,0 +1,385 @@
+{
+ "cadre": 64,
+ "marche": {
+  "ligneDepart": 0,
+  "nbLignes": 4,
+  "nbImages": 9,
+  "colonnes": 9
+ },
+ "directions": [
+  "up",
+  "left",
+  "down",
+  "right"
+ ],
+ "ordreCalques": [
+  "corps",
+  "tete",
+  "visage",
+  "bas",
+  "haut",
+  "chaussures",
+  "cheveux",
+  "chapeau"
+ ],
+ "calques": {
+  "corps": [
+   {
+    "id": "body-color",
+    "nom": "Couleur de peau",
+    "fichier": "corps/body-color.png",
+    "ordre": 10
+   }
+  ],
+  "tete": [
+   {
+    "id": "human-child",
+    "nom": "Enfant",
+    "fichier": "tete/human-child.png",
+    "ordre": 100
+   },
+   {
+    "id": "human-elderly-small",
+    "nom": "Personne âgée",
+    "fichier": "tete/human-elderly-small.png",
+    "ordre": 100
+   },
+   {
+    "id": "human-female",
+    "nom": "Fille",
+    "fichier": "tete/human-female.png",
+    "ordre": 100
+   },
+   {
+    "id": "human-female-elderly",
+    "nom": "Grand-mère",
+    "fichier": "tete/human-female-elderly.png",
+    "ordre": 100
+   },
+   {
+    "id": "human-female-small",
+    "nom": "Petite fille",
+    "fichier": "tete/human-female-small.png",
+    "ordre": 100
+   },
+   {
+    "id": "human-male",
+    "nom": "Garçon",
+    "fichier": "tete/human-male.png",
+    "ordre": 100
+   }
+  ],
+  "visage": [
+   {
+    "id": "happy-alt",
+    "nom": "Sourire",
+    "fichier": "visage/happy-alt.png",
+    "ordre": 106
+   }
+  ],
+  "bas": [
+   {
+    "id": "belle-skirt",
+    "nom": "Jupe à volants",
+    "fichier": "bas/belle-skirt.png",
+    "ordre": 20
+   },
+   {
+    "id": "cuffed-pants",
+    "nom": "Pantalon à revers",
+    "fichier": "bas/cuffed-pants.png",
+    "ordre": 20
+   },
+   {
+    "id": "formal-pants",
+    "nom": "Pantalon habillé",
+    "fichier": "bas/formal-pants.png",
+    "ordre": 20
+   },
+   {
+    "id": "leggings",
+    "nom": "Legging",
+    "fichier": "bas/leggings.png",
+    "ordre": 20
+   },
+   {
+    "id": "leggings-2",
+    "nom": "Legging fin",
+    "fichier": "bas/leggings-2.png",
+    "ordre": 20
+   },
+   {
+    "id": "legion-skirt",
+    "nom": "Jupe longue",
+    "fichier": "bas/legion-skirt.png",
+    "ordre": 20
+   },
+   {
+    "id": "long-pants",
+    "nom": "Pantalon long",
+    "fichier": "bas/long-pants.png",
+    "ordre": 20
+   },
+   {
+    "id": "pantaloons",
+    "nom": "Pantalon bouffant",
+    "fichier": "bas/pantaloons.png",
+    "ordre": 20
+   }
+  ],
+  "haut": [
+   {
+    "id": "cardigan",
+    "nom": "Cardigan",
+    "fichier": "haut/cardigan.png",
+    "ordre": 35
+   },
+   {
+    "id": "longsleeve",
+    "nom": "Manches longues",
+    "fichier": "haut/longsleeve.png",
+    "ordre": 35
+   },
+   {
+    "id": "longsleeve-2",
+    "nom": "Pull fin",
+    "fichier": "haut/longsleeve-2.png",
+    "ordre": 35
+   },
+   {
+    "id": "longsleeve-2-buttoned",
+    "nom": "Chemise boutonnée",
+    "fichier": "haut/longsleeve-2-buttoned.png",
+    "ordre": 35
+   },
+   {
+    "id": "longsleeve-2-scoop",
+    "nom": "Col rond",
+    "fichier": "haut/longsleeve-2-scoop.png",
+    "ordre": 35
+   },
+   {
+    "id": "longsleeve-2-vneck",
+    "nom": "Col en V",
+    "fichier": "haut/longsleeve-2-vneck.png",
+    "ordre": 35
+   },
+   {
+    "id": "longsleeve-polo",
+    "nom": "Polo manches longues",
+    "fichier": "haut/longsleeve-polo.png",
+    "ordre": 35
+   },
+   {
+    "id": "original-sleeveless",
+    "nom": "Débardeur",
+    "fichier": "haut/original-sleeveless.png",
+    "ordre": 35
+   },
+   {
+    "id": "scoop",
+    "nom": "Haut col rond",
+    "fichier": "haut/scoop.png",
+    "ordre": 35
+   },
+   {
+    "id": "shortsleeve",
+    "nom": "Manches courtes",
+    "fichier": "haut/shortsleeve.png",
+    "ordre": 35
+   },
+   {
+    "id": "shortsleeve-cardigan",
+    "nom": "Gilet léger",
+    "fichier": "haut/shortsleeve-cardigan.png",
+    "ordre": 35
+   },
+   {
+    "id": "shortsleeve-polo",
+    "nom": "Polo",
+    "fichier": "haut/shortsleeve-polo.png",
+    "ordre": 35
+   }
+  ],
+  "chaussures": [
+   {
+    "id": "basic-shoes",
+    "nom": "Chaussures",
+    "fichier": "chaussures/basic-shoes.png",
+    "ordre": 15
+   },
+   {
+    "id": "revised-shoes",
+    "nom": "Baskets",
+    "fichier": "chaussures/revised-shoes.png",
+    "ordre": 15
+   },
+   {
+    "id": "basic-boots",
+    "nom": "Bottes",
+    "fichier": "chaussures/basic-boots.png",
+    "ordre": 25
+   },
+   {
+    "id": "folded-rim-boots",
+    "nom": "Bottes à revers",
+    "fichier": "chaussures/folded-rim-boots.png",
+    "ordre": 25
+   },
+   {
+    "id": "revised-boots",
+    "nom": "Bottines",
+    "fichier": "chaussures/revised-boots.png",
+    "ordre": 25
+   }
+  ],
+  "cheveux": [
+   {
+    "id": "afro",
+    "nom": "Afro",
+    "fichier": "cheveux/afro.png",
+    "ordre": 120
+   },
+   {
+    "id": "bangs",
+    "nom": "Frange",
+    "fichier": "cheveux/bangs.png",
+    "ordre": 120
+   },
+   {
+    "id": "bangs-bun",
+    "nom": "Frange et chignon",
+    "fichier": "cheveux/bangs-bun.png",
+    "ordre": 120
+   },
+   {
+    "id": "bangslong",
+    "nom": "Frange longue",
+    "fichier": "cheveux/bangslong.png",
+    "ordre": 120
+   },
+   {
+    "id": "bangslong2",
+    "nom": "Cheveux longs",
+    "fichier": "cheveux/bangslong2.png",
+    "ordre": 120
+   },
+   {
+    "id": "bangsshort",
+    "nom": "Frange courte",
+    "fichier": "cheveux/bangsshort.png",
+    "ordre": 120
+   },
+   {
+    "id": "bedhead",
+    "nom": "Ébouriffé",
+    "fichier": "cheveux/bedhead.png",
+    "ordre": 120
+   },
+   {
+    "id": "bob",
+    "nom": "Carré",
+    "fichier": "cheveux/bob.png",
+    "ordre": 120
+   },
+   {
+    "id": "bob-side-part",
+    "nom": "Carré avec raie",
+    "fichier": "cheveux/bob-side-part.png",
+    "ordre": 120
+   },
+   {
+    "id": "braid",
+    "nom": "Tresse",
+    "fichier": "cheveux/braid.png",
+    "ordre": 120
+   },
+   {
+    "id": "braid2",
+    "nom": "Longue tresse",
+    "fichier": "cheveux/braid2.png",
+    "ordre": 120
+   },
+   {
+    "id": "bunches",
+    "nom": "Couettes",
+    "fichier": "cheveux/bunches.png",
+    "ordre": 120
+   },
+   {
+    "id": "buzzcut",
+    "nom": "Rasé",
+    "fichier": "cheveux/buzzcut.png",
+    "ordre": 120
+   },
+   {
+    "id": "cornrows",
+    "nom": "Tresses collées",
+    "fichier": "cheveux/cornrows.png",
+    "ordre": 120
+   },
+   {
+    "id": "cowlick",
+    "nom": "Épi",
+    "fichier": "cheveux/cowlick.png",
+    "ordre": 120
+   },
+   {
+    "id": "cowlick-tall",
+    "nom": "Grand épi",
+    "fichier": "cheveux/cowlick-tall.png",
+    "ordre": 120
+   }
+  ],
+  "chapeau": [
+   {
+    "id": "bonnie",
+    "nom": "Bob",
+    "fichier": "chapeau/bonnie.png",
+    "ordre": 130
+   },
+   {
+    "id": "christmas-hat",
+    "nom": "Bonnet de Noël",
+    "fichier": "chapeau/christmas-hat.png",
+    "ordre": 130
+   },
+   {
+    "id": "crown",
+    "nom": "Couronne",
+    "fichier": "chapeau/crown.png",
+    "ordre": 130
+   },
+   {
+    "id": "formal-bowler-hat",
+    "nom": "Chapeau melon",
+    "fichier": "chapeau/formal-bowler-hat.png",
+    "ordre": 130
+   },
+   {
+    "id": "hood",
+    "nom": "Capuche",
+    "fichier": "chapeau/hood.png",
+    "ordre": 130
+   },
+   {
+    "id": "leather-cap",
+    "nom": "Casquette",
+    "fichier": "chapeau/leather-cap.png",
+    "ordre": 130
+   },
+   {
+    "id": "tiara",
+    "nom": "Diadème",
+    "fichier": "chapeau/tiara.png",
+    "ordre": 130
+   },
+   {
+    "id": "wizard-hat-base",
+    "nom": "Chapeau de magicien",
+    "fichier": "chapeau/wizard-hat-base.png",
+    "ordre": 130
+   }
+  ]
+ }
+}
