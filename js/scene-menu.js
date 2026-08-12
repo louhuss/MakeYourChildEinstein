@@ -6,12 +6,35 @@
 const SceneBoot = class extends Phaser.Scene {
   constructor() { super('Boot'); }
   preload() {
+    /* On repère si un fichier n'a pas pu être chargé. C'est ce qui arrive
+       quand on ouvre index.html directement : le navigateur refuse de lire
+       les images voisines, et le jeu s'affiche en damier vert. */
+    this.echecs = [];
+    this.load.on('loaderror', (f) => this.echecs.push(f.key));
+
     /* les planches de tuiles Kenney (licence CC0) */
     Tileset.preload(this);
     /* calques de personnages LPC */
     LPC.preloadManifest(this);
   }
   create() {
+    /* Message clair plutôt qu'un décor cassé. */
+    const surFichier = location.protocol === 'file:';
+    if (surFichier || (this.echecs && this.echecs.length)) {
+      document.getElementById('loading').innerHTML =
+        '<div style="max-width:560px;text-align:center;padding:30px;line-height:1.6">' +
+        '<div style="font-size:44px">🔌</div>' +
+        '<h2 style="margin:14px 0 10px">Il faut lancer le jeu avec son serveur</h2>' +
+        '<p style="font-weight:normal;font-size:16px">Ton navigateur refuse de charger les images ' +
+        'quand on ouvre le fichier directement depuis le disque. C\'est une sécurité de Chrome, ' +
+        'pas un bug du jeu.</p>' +
+        '<p style="font-weight:normal;font-size:16px"><b>Ferme cet onglet et double-clique sur ' +
+        '<code>demarrer-serveur.bat</code></b>, dans le dossier du jeu. Il ouvrira la bonne adresse ' +
+        'tout seul.</p></div>';
+      document.getElementById('loading').classList.remove('gone');
+      return;
+    }
+
     State.load();
     Art.init(this);
     Tileset.makeWater(this);
