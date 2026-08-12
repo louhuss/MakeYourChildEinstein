@@ -523,6 +523,7 @@ const UI = (function () {
       '<div class="mp">🏠<b>Ta maison</b></div>' +
       '<div class="mp">⚓<b>Le port</b></div>' +
       '<div class="mp">🌾<b>La ferme</b></div>' +
+      '<div class="mp">🔥<b>Le campement</b></div>' +
       '<div class="mp">🏦<b>La banque</b></div>' +
       '<div class="mp">🛍️<b>La boutique</b></div>' +
       '<div class="mp soon">🏛️<b>Le musée</b><small>bientôt</small></div>' +

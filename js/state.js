@@ -37,7 +37,7 @@ const State = (function () {
       plot: [],                  /* { itemId, gx, gy } */
       badges: [],
       encyclopedia: [],
-      quests: { peche: 'todo', ferme: 'todo' },
+      quests: { peche: 'todo', ferme: 'todo', feu: 'todo' },
       log: [],                   /* journal visible par le parent */
       settings: { music: 0.4, sfx: 0.7, dyslexia: false, voice: true, bigText: false },
       parentPin: '1234',
@@ -64,6 +64,10 @@ const State = (function () {
         allFunds().forEach(function (f) {
           if (!data.funds[f.id]) data.funds[f.id] = { value: 1, history: [1], enabled: true };
         });
+        /* on complète les nouvelles quêtes ajoutées depuis la sauvegarde
+           (Object.assign remplace tout l'objet "quests" d'un coup) */
+        if (!data.quests) data.quests = {};
+        if (!data.quests.feu) data.quests.feu = 'todo';
         return true;
       } catch (e) { }
     }

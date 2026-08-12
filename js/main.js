@@ -22,7 +22,7 @@ const game = new Phaser.Game({
     default: 'arcade',
     arcade: { gravity: { y: 0 }, debug: false }
   },
-  scene: [SceneBoot, SceneTitle, SceneCreator, SceneVillage, SceneFishing, SceneFarm, ScenePlot]
+  scene: [SceneBoot, SceneTitle, SceneCreator, SceneVillage, SceneFishing, SceneFarm, SceneFire, ScenePlot]
 });
 
 /* petite musique d'ambiance générée en code (aucun fichier audio) */

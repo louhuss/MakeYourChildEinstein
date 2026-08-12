@@ -208,8 +208,9 @@ const SceneVillage = class extends Phaser.Scene {
     /* petites conversations entre habitants */
     this.time.addEvent({ delay: 14000, loop: true, callback: () => this.npcChat() });
 
-    if (this.arrival === 'peche' || this.arrival === 'ferme') {
-      this.player.setPosition(this.arrival === 'peche' ? 31 * T : 51 * T, 33 * T);
+    if (this.arrival === 'peche' || this.arrival === 'ferme' || this.arrival === 'feu') {
+      const pos = { peche: [31, 33], ferme: [51, 33], feu: [17, 25] }[this.arrival];
+      this.player.setPosition(pos[0] * T, pos[1] * T);
     }
     if (State.get().tutorial === 0) this.time.delayedCall(600, () => this.tutorial());
   }
@@ -481,6 +482,19 @@ const SceneVillage = class extends Phaser.Scene {
     this.cloture(50, 21, 4, true);
     this.cloture(47, 32, 5, false);
 
+    /* le campement d'Ayla, à l'écart, à l'ouest de la banque */
+    this.put(17, 24, K.TONNEAU);
+    this.put(18, 25, K.CAILLOUX || K.HERBE_CAILLOUX);
+    const feuLabel = this.add.text(17 * T + T / 2, 23.4 * T, '🔥 Le Campement', {
+      fontFamily: 'Verdana', fontSize: '12px', color: '#fff8ee',
+      backgroundColor: '#2f2838cc', padding: { x: 6, y: 3 }
+    }).setOrigin(0.5, 1).setDepth(99998).setScale(this.ECHELLE_TEXTE);
+    this.textesMonde.push(feuLabel);
+    this.interactables.push({
+      x: 17 * T + T / 2, y: 25 * T + T, label: 'Rejoindre le campement', kind: 'door',
+      action: () => this.startFire()
+    });
+
     /* panneau sur la place */
     const p = this.put(31, 26, K.PANNEAU);
     this.interactables.push({
@@ -567,7 +581,8 @@ const SceneVillage = class extends Phaser.Scene {
     const T = this.T;
     const spots = {
       marin: [30, 34], maya: [49, 21], awa: [14, 23], theo: [26, 13],
-      lina: [33, 27], elio: [42, 13], noor: [10, 13], sacha: [55, 27]
+      lina: [33, 27], elio: [42, 13], noor: [10, 13], sacha: [55, 27],
+      ayla: [18, 24]
     };
     this.npcs = [];
     GameData.npcs.forEach((n) => {
@@ -647,6 +662,16 @@ const SceneVillage = class extends Phaser.Scene {
       ]);
       return;
     }
+    if (n.id === 'ayla') {
+      const lines = q.feu === 'done'
+        ? n.afterQuest.concat(['On peut raviver le foyer ensemble, si tu veux.'])
+        : n.greetings.concat(['Tu veux bien m\'aider à le rallumer ?']);
+      UI.say(n.name, portrait, lines, null, [
+        { label: '🔥 Rejoindre le campement', action: () => this.startFire() },
+        { label: 'Plus tard', action: () => { } }
+      ]);
+      return;
+    }
     if (n.id === 'awa') {
       UI.say(n.name, portrait, n.greetings.concat([
         'Ici, tu peux garder ton argent de poche… ou le faire grandir.',
@@ -665,7 +690,7 @@ const SceneVillage = class extends Phaser.Scene {
       ]);
       return;
     }
-    const pool = (q.peche === 'done' || q.ferme === 'done') && n.afterQuest && n.afterQuest.length
+    const pool = (q.peche === 'done' || q.ferme === 'done' || q.feu === 'done') && n.afterQuest && n.afterQuest.length
       ? n.greetings.concat(n.afterQuest) : n.greetings.concat(n.idle || []);
     UI.say(n.name, portrait, [Phaser.Utils.Array.GetRandom(pool),
                               Phaser.Utils.Array.GetRandom(n.idle || pool)]);
@@ -701,11 +726,16 @@ const SceneVillage = class extends Phaser.Scene {
     this.cameras.main.fadeOut(300);
     this.time.delayedCall(320, () => { UI.hideAll(); this.scene.start('Farm'); });
   }
+  startFire() {
+    this.cameras.main.fadeOut(300);
+    this.time.delayedCall(320, () => { UI.hideAll(); this.scene.start('Fire'); });
+  }
 
   updateQuestLabel() {
     const q = State.get().quests;
     if (q.peche !== 'done') UI.setQuest('Va voir le Capitaine Marin au port ⚓');
     else if (q.ferme !== 'done') UI.setQuest('Va aider Maya à la ferme 🌾');
+    else if (q.feu !== 'done') UI.setQuest('Va aider Ayla à rallumer le feu du campement 🔥');
     else UI.setQuest('Explore le village, décore ton terrain et fais grandir ton épargne !');
   }
 

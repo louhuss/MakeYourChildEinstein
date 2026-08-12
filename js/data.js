@@ -338,6 +338,49 @@ const GameData = {
     { id: 'hiver', label: 'Hiver', color: 0x9fd0e8 }
   ],
 
+  /* =====================  MATÉRIAUX DU FEU  ===================== */
+  /* Chaque matériau a deux propriétés visibles et indépendantes :
+     l'humidité (sec / humide) et l'épaisseur (fin / épais).
+     C'est cette double condition que le joueur doit apprendre à lire. */
+  fireMaterials: [
+    {
+      id: 'amadou', name: 'Amadou', kind: 'amadou', humidity: 'sec', epaisseur: 'fin',
+      emoji: '🌾',
+      fact: "L'amadou est une matière très fine qui prend feu au moindre contact avec une étincelle ou une braise.",
+      verified: false
+    },
+    {
+      id: 'petit_bois_sec', name: 'Petit bois sec', kind: 'petit_bois', humidity: 'sec', epaisseur: 'fin',
+      emoji: '🌿',
+      fact: "Fin et sec, le petit bois s'enflamme vite : c'est lui qui fait grandir la toute première flamme.",
+      verified: false
+    },
+    {
+      id: 'petit_bois_humide', name: 'Petit bois humide', kind: 'petit_bois', humidity: 'humide', epaisseur: 'fin',
+      emoji: '🍃',
+      fact: "Un bois humide fume avant de brûler : l'eau qu'il contient doit d'abord s'évaporer.",
+      verified: false
+    },
+    {
+      id: 'buche_seche', name: 'Bûche sèche', kind: 'buche', humidity: 'sec', epaisseur: 'epais',
+      emoji: '🪵',
+      fact: "Une bûche est épaisse : elle met du temps à s'enflammer, mais elle brûle longtemps une fois allumée.",
+      verified: false
+    },
+    {
+      id: 'buche_humide', name: 'Bûche humide', kind: 'buche', humidity: 'humide', epaisseur: 'epais',
+      emoji: '🪵',
+      fact: "Trop humide, une bûche refuse de prendre : mieux vaut la laisser sécher un peu près du feu.",
+      verified: false
+    },
+    {
+      id: 'pierre', name: 'Pierre', kind: 'pierre', humidity: 'sec', epaisseur: 'epais',
+      emoji: '🪨',
+      fact: "Des pierres posées autour du foyer coupent le vent et protègent une flamme encore fragile.",
+      verified: false
+    }
+  ],
+
   /* =====================  ENCYCLOPÉDIE  ===================== */
   encyclopedia: [
     {
@@ -447,6 +490,24 @@ const GameData = {
       text: "Sur la Terre, on compte cinq grands océans et de vastes terres appelées continents.",
       wow: "Le sais-tu ? Les continents bougent de quelques centimètres par an, comme des radeaux très lents.",
       foundAt: 'À la gare', icon: 'monde', verified: false
+    },
+    {
+      id: 'ency_feu_1', category: 'histoire', title: "Un feu qui ne s'invente pas chaque soir",
+      text: "Bien avant ce campement, des groupes humains savaient déjà entretenir un feu : le garder vivant, jour après jour, plutôt que le rallumer à chaque fois.",
+      wow: "Le sais-tu ? L'entretien du feu est une pratique très ancienne, bien antérieure à cette histoire.",
+      foundAt: 'Au campement avec Ayla', icon: 'feu', verified: false
+    },
+    {
+      id: 'ency_feu_2', category: 'histoire', title: "Deux façons d'allumer sans allumette",
+      text: "Sans briquet ni allumette, on peut allumer un feu en frottant deux morceaux de bois très vite, ou en frappant certaines pierres pour créer une étincelle.",
+      wow: "Le sais-tu ? Ces deux techniques demandent beaucoup de patience et d'entraînement.",
+      foundAt: 'Au campement avec Ayla', icon: 'feu', verified: false
+    },
+    {
+      id: 'ency_feu_3', category: 'histoire', title: 'Des campements, pas un campement',
+      text: "Il n'existe pas un unique mode de vie « préhistorique » : les groupes humains de cette époque étaient nombreux et différents les uns des autres.",
+      wow: "Le sais-tu ? Beaucoup de ces groupes se déplaçaient souvent, en suivant le gibier et les saisons.",
+      foundAt: 'Au campement avec Ayla', icon: 'monde', verified: false
     }
   ],
 
@@ -591,12 +652,14 @@ const GameData = {
     { id:'mouton',        name:'Mouton',             emoji:'🐑', price:160, w:1, h:1, kind:'animal' },
     { id:'sapin',         name:'Sapin',              emoji:'🌲', price:170, w:1, h:2, kind:'plante' },
     { id:'arbre',         name:'Arbre',              emoji:'🌳', price:180, w:1, h:2, kind:'plante' },
-    { id:'vache',         name:'Vache',              emoji:'🐄', price:200, w:1, h:1, kind:'animal' }
+    { id:'vache',         name:'Vache',              emoji:'🐄', price:200, w:1, h:1, kind:'animal' },
+    { id:'foyer_abrite',  name:'Foyer abrité',       emoji:'🔥', price:140, w:1, h:1, kind:'deco' }
   ],
 
   badges: [
     { id: 'ocean', name: 'Protecteur de l\'océan', emoji: '🌊', desc: "Tu as terminé la sortie en mer." },
     { id: 'potager', name: 'Ami du potager', emoji: '🌱', desc: "Tu as terminé la journée à la ferme." },
+    { id: 'feu', name: 'Gardien du feu', emoji: '🔥', desc: "Tu as rallumé et entretenu le feu du campement." },
     { id: 'banquier', name: 'Petit épargnant', emoji: '🏦', desc: "Tu as placé ton argent pour la première fois." },
     { id: 'decorateur', name: 'Décorateur', emoji: '🎨', desc: "Tu as posé 5 objets sur ton terrain." },
     { id: 'curieux', name: 'Grand curieux', emoji: '📖', desc: "Tu as rempli 10 fiches d'encyclopédie." }
@@ -676,6 +739,14 @@ const GameData = {
       greetings: ["Le train de midi est à l'heure !", "Tu pars en voyage aujourd'hui ?"],
       idle: ["D'ici, on peut aller très loin.", "Un coup de sifflet, deux valises, et hop !"],
       afterQuest: ["Bon voyage, et reviens nous voir !"]
+    },
+    {
+      id: 'ayla', name: 'Ayla', role: 'Gardienne du campement', emoji: '🔥',
+      x: 0, z: 0,
+      look: { skin: 3, hair: 2, hairColor: 6, outfit: 3, hat: 'aucun' },
+      greetings: ["Le feu du campement s'est éteint cette nuit...", "Il va nous falloir un peu d'aide avant la nuit prochaine."],
+      idle: ["Le bois mort suffit toujours, inutile de couper un arbre vivant.", "Un feu bien entretenu se transmet, il ne s'invente pas chaque soir."],
+      afterQuest: ["Grâce à toi, le foyer tient bon toute la nuit."]
     }
   ],
 
@@ -685,7 +756,8 @@ const GameData = {
     { a: 'awa', b: 'theo', lines: ["Tes clients gardent-ils un peu de monnaie ?", "Les plus malins, oui !"] },
     { a: 'lina', b: 'elio', lines: ["C'est vrai qu'avant, il n'y avait pas de pièces ?", "On échangeait du sel contre du blé."] },
     { a: 'noor', b: 'sacha', lines: ["Cette nuit, le ciel sera très clair.", "Je regarderai depuis le quai !"] },
-    { a: 'maya', b: 'theo', lines: ["Mes courgettes sont prêtes.", "Je les prends toutes : elles viennent d'à côté !"] }
+    { a: 'maya', b: 'theo', lines: ["Mes courgettes sont prêtes.", "Je les prends toutes : elles viennent d'à côté !"] },
+    { a: 'ayla', b: 'marin', lines: ["Le vent tourne, ce soir.", "Alors protège bien ta flamme !"] }
   ],
 
   /* =====================  ASTUCES  ===================== */
@@ -697,6 +769,8 @@ const GameData = {
     "Astuce : un fruit de saison a souvent voyagé moins loin pour arriver chez toi.",
     "Astuce : les piécettes gagnées dans les missions servent à décorer ton terrain.",
     "Astuce : quand on place son argent, ça monte et ça descend. Sois patient !",
-    "Astuce : trie bien les déchets, chaque poubelle a sa couleur."
+    "Astuce : trie bien les déchets, chaque poubelle a sa couleur.",
+    "Astuce : au campement, un bois humide fume au lieu de prendre feu.",
+    "Astuce : n'oublie jamais d'éteindre complètement le feu avant de partir."
   ]
 };
